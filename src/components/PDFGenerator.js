@@ -1,86 +1,75 @@
 import React, { useState } from "react";
 import jsPDF from "jspdf";
+import "./PDFGenerator.css";
 
 const PDFGenerator = () => {
   const [file, setFile] = useState(null);
-  const [fileType, setFileType] = useState("");
 
-  // Handle file input and detect type
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
+
     if (uploadedFile) {
       const type = uploadedFile.type;
-
       setFile(uploadedFile);
 
       if (type.startsWith("image/")) {
-        setFileType("image");
+        convertImageToPDF(uploadedFile);
       } else if (type === "text/html") {
-        setFileType("html");
+        alert("HTML to PDF coming soon!");
       } else if (
         type === "application/msword" ||
         type ===
           "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
       ) {
-        setFileType("doc");
+        alert("Word to PDF coming soon!");
       } else {
-        alert("Unsupported file type");
-        setFile(null);
-        setFileType("");
+        alert("Unsupported file type.");
       }
     }
   };
 
-  // Image to PDF logic only (for now)
-  const generatePDF = () => {
-    if (!file) return alert("Please upload a file");
+  const convertImageToPDF = (imageFile) => {
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const imgData = e.target.result;
+      const img = new Image();
 
-    if (fileType === "image") {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const imgData = e.target.result;
-        const img = new Image();
+      img.onload = function () {
+        const imgWidth = img.width;
+        const imgHeight = img.height;
 
-        img.onload = function () {
-          const imgWidth = img.width;
-          const imgHeight = img.height;
+        const pageWidth = imgWidth * 0.264583;
+        const pageHeight = imgHeight * 0.264583;
 
-          const pageWidth = imgWidth * 0.264583; // px to mm
-          const pageHeight = imgHeight * 0.264583;
+        const doc = new jsPDF({
+          orientation: pageWidth > pageHeight ? "l" : "p",
+          unit: "mm",
+          format: [pageWidth, pageHeight],
+        });
 
-          const doc = new jsPDF({
-            orientation: pageWidth > pageHeight ? "l" : "p",
-            unit: "mm",
-            format: [pageWidth, pageHeight],
-          });
-
-          doc.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
-          doc.save("image-converted.pdf");
-        };
-
-        img.src = imgData;
+        doc.addImage(imgData, "JPEG", 0, 0, pageWidth, pageHeight);
+        doc.save("converted.pdf");
       };
-      reader.readAsDataURL(file);
-    } else {
-      alert(`Conversion for "${fileType}" is coming soon!`);
-    }
+
+      img.src = imgData;
+    };
+    reader.readAsDataURL(imageFile);
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Multi-File to PDF Converter</h2>
-
-      <input
-        type="file"
-        accept=".jpg,.jpeg,.png,.html,.htm,.doc,.docx"
-        onChange={handleFileChange}
-      />
-
-      <br /><br />
-
-      <button onClick={generatePDF} disabled={!file}>
-        Convert & Download PDF
-      </button>
+    <div className="pdf-container">
+      <div className="pdf-box">
+        <h2 className="pdf-heading">Easily convert files to PDF in seconds</h2>
+        <label className="pdf-file-label">
+          <input
+            type="file"
+            accept=".jpg,.jpeg,.png,.html,.htm,.doc,.docx"
+            onChange={handleFileChange}
+            className="pdf-file-input"
+          />
+          Choose File
+        </label>
+      </div>
     </div>
   );
 };
