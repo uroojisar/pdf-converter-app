@@ -29,19 +29,6 @@ const PDFGenerator = () => {
   };
 
   return (
-    <div className="pdf-app">
-      <header className="pdf-header">
-        <div className="pdf-header-content">
-          <div className="logo-title">
-            <span className="logo">📄⚡</span> QuickPDF
-          </div>
-          <nav className="nav-menu">
-            <a href="#tools" className="nav-link">Tools</a>
-            <a href="#about" className="nav-link">About</a>
-          </nav>
-        </div>
-      </header>
-
       <main className="pdf-container">
         <div className="pdf-box">
           <h2 className="pdf-heading">Easily convert files to PDF in seconds</h2>
@@ -56,11 +43,6 @@ const PDFGenerator = () => {
           </label>
         </div>
       </main>
-
-      <footer className="pdf-footer">
-        © 2025 QuickPDF — All rights reserved.
-      </footer>
-    </div>
   );
 };
 
