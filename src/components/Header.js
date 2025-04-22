@@ -1,19 +1,28 @@
-// src/components/Header.js
-import React from 'react';
-import './PDFGenerator.css'; // Use the same CSS if shared
+import React, { useState } from 'react';
+import './PDFGenerator.css';
 
 const Header = () => {
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="pdf-header">
       <div className="pdf-header-content">
-          <div className="logo-title">
-            <span className="logo">📄⚡</span> QuickPDF
+      <a href="/" className="logo-title">QuickPDF</a>
+
+        <nav className="nav-menu">
+          <a href="#" className="nav-link">Tools</a>
+          <a href="#" className="nav-link">About</a>
+        </nav>
+
+        <button className="menu-toggle" onClick={() => setOpen(!open)}>☰</button>
+
+        {open && (
+          <div className="dropdown">
+            <a href="#">Tools</a>
+            <a href="#">About</a>
           </div>
-          <nav className="nav-menu">
-            <a href="#tools" className="nav-link">Tools</a>
-            <a href="#about" className="nav-link">About</a>
-          </nav>
-        </div>
+        )}
+      </div>
     </header>
   );
 };
