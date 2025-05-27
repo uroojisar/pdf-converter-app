@@ -50,7 +50,27 @@ const PDFGenerator = () => {
         }
       };
       reader.readAsArrayBuffer(file);
-    } else {
+    } 
+    else if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const container = document.createElement('div');
+        container.innerHTML = reader.result;
+        container.style.width = '800px'; // Make width consistent for PDF
+        document.body.appendChild(container);
+
+        html2pdf()
+          .from(container)
+          .outputPdf('bloburl')
+          .then((blobUrl) => {
+            document.body.removeChild(container);
+            navigate('/preview', { state: { pdfUrl: blobUrl } });
+          });
+      };
+      reader.readAsText(file);
+    }
+    
+    else {
       alert('Unsupported file type. Please upload a JPG, PNG, or DOCX file.');
     }
   };
