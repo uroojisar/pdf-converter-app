@@ -30,13 +30,16 @@ const PDFPreview = () => {
       )}
 
       {!isMobile ? (
-        <iframe
+        <><iframe
           src={pdfUrl}
           title="PDF Preview"
           className="pdf-frame"
           onLoad={() => setLoading(false)}
-          style={{ display: loading ? 'none' : 'block' }}
-        />
+          style={{ display: loading ? 'none' : 'block' }} /><div style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <a href={pdfUrl} download="converted.pdf" className="download-link">
+              📥 Download PDF
+            </a>
+          </div></>
       ) : (
         <div className="mobile-download">
           <p>PDF preview not supported on this device. Please download:</p>
